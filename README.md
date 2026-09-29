@@ -37,11 +37,11 @@ python -m unittest test_extraction.py
 
 ## Deploy on Streamlit Community Cloud
 
-At https://share.streamlit.io, create an app from `Lemniscabio/plate-to-excel`, branch `main`, entrypoint `app.py`. In Advanced settings, select Python 3.12 and add the following in Secrets, replacing the placeholder with your key:
+At https://share.streamlit.io, create an app from `dibyochakraborty-lemnisca/plate-to-excel`, branch `main`, entrypoint `app.py`. In Advanced settings, select Python 3.12 and add the following in Secrets, replacing the placeholder with your key:
 
 ```toml
 GEMINI_API_KEY = "your-key"
 GEMINI_MODEL = "gemini-3.8-flash"
 ```
 
-Keep the app private for team use. Community Cloud provides HTTPS for phone camera access. Do not upload `.env` to GitHub. Local `.env` and hosted Streamlit secrets are both supported.
+Repository visibility and app access are separate settings. Configure app access in Streamlit as needed. Community Cloud provides HTTPS for phone camera access. Do not upload `.env` to GitHub. Local `.env` and hosted Streamlit secrets are both supported.
