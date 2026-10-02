@@ -1,0 +1,9 @@
+.git
+.venv
+.env*
+secrets
+service-account*.json
+data
+__pycache__
+.impeccable
+.kilo

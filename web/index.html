@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#146c60"><title>Plate to Excel · Lab workspace</title>
+<link rel="manifest" href="/static/manifest.json"><link rel="icon" href="/static/icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/static/style.css"><script src="/static/app.js" type="module"></script>
+</head>
+<body>
+<header><a href="/" class="brand">Plate to Excel<span>Lab workspace</span></a><div class="header-actions"><span id="connection" role="status">Connecting…</span></div></header>
+<main>
+<div id="notice" role="status" aria-live="polite" hidden></div>
+<section id="workspace">
+<div class="workspace-heading"><div><h1>Lab readings</h1><p class="muted">Shared lab workspace</p></div><button id="new-experiment" class="secondary">New experiment</button></div>
+<label class="experiment-picker">Experiment<select id="experiment-select"><option value="">Choose an experiment</option></select></label>
+<section id="experiment-editor" class="panel" hidden>
+<h2 id="experiment-form-title">New experiment</h2>
+<form id="experiment-form"><div class="form-grid"><label>Experiment ID<input name="name" placeholder="e.g. GROWTH-042" maxlength="80" required></label><label>Experiment start (local time)<input name="started_at" type="datetime-local" required></label><label class="wide">Google Sheet URL <span class="muted">optional until ready to sync</span><input name="sheet_id" type="url" placeholder="https://docs.google.com/spreadsheets/d/…"></label></div><p class="muted">Use a sheet shared with the lab’s service account. The app manages its own readings, trajectories and photos tabs; make reading corrections here.</p><div class="actions"><button type="submit">Save experiment</button><button type="button" id="cancel-experiment" class="quiet">Cancel</button></div></form>
+</section>
+<div id="experiment-body" hidden>
+<nav aria-label="Experiment sections"><button data-view="capture" aria-current="page">Capture</button><button data-view="review">Review <span id="review-count"></span></button><button data-view="plots">Trajectories</button><button data-view="setup">Setup</button></nav>
+<section id="view-capture">
+<div class="section-heading"><div><h2>Capture now. Process later.</h2><p>Photos save on this device first, even without internet.</p></div></div>
+<label>Reading template<select id="capture-template"></select></label><p id="template-summary" class="muted"></p>
+<div class="capture-actions"><label class="button" id="camera-label">Take photo<input id="camera" type="file" accept="image/*" capture="environment"></label><label class="button secondary" id="upload-label">Upload photos<input id="upload" type="file" accept="image/jpeg,image/png,image/webp" multiple></label></div>
+<p id="capture-help" class="muted">Include the complete row and column labels. Uploads use the time added; you can correct it during review.</p>
+<div class="section-heading"><h3>On this device <span id="queue-count"></span></h3><button id="upload-queue" class="secondary">Upload saved photos</button></div>
+<div id="local-queue" class="photo-list"></div><p class="muted">Keep this app open to upload. Don’t clear browser data until your photos say “Uploaded”.</p>
+<div class="section-heading"><h3>Uploaded photos</h3><button id="process-all">Extract pending photos</button></div><div id="capture-list" class="photo-list"></div>
+</section>
+<section id="view-review" hidden><div class="section-heading"><div><h2>Review readings</h2><p>Confirm the well mapping and values before they enter your trajectories.</p></div></div><label>Photo<select id="review-photo"></select></label><div id="review-content"></div></section>
+<section id="view-plots" hidden><div class="section-heading"><div><h2>OD over time</h2><p>Reviewed readings only. Each point is the mean of all expected replicates.</p></div><button id="download" class="secondary">Download Excel</button></div><label>Flask<select id="plot-flask"></select></label><div id="plot"></div><div id="plot-table" class="table-scroll"></div></section>
+<section id="view-setup" hidden>
+<div class="section-heading"><h2>Experiment setup</h2><button id="edit-experiment" class="secondary">Edit experiment</button></div>
+<section class="panel"><h3>Google Sheets</h3><p id="sheet-status"></p><p id="sheet-error" class="error-text"></p><div class="actions"><a id="sheet-link" target="_blank" rel="noopener" hidden>Open spreadsheet</a><button id="sync-sheet" class="secondary">Retry sync</button></div></section>
+<div class="section-heading"><h3>Reading templates</h3><button id="new-template" class="secondary">Add template</button></div><p class="muted">Create one for each flask group. Saved templates stay fixed so earlier photos keep their original protocol; duplicate a template to change it.</p><div id="templates"></div>
+<section id="template-editor" class="panel" hidden><h3>New reading template</h3><form id="template-form"><div class="form-grid"><label class="wide">Template name<input name="name" placeholder="e.g. Flasks 01–08 · duplicates" maxlength="80" required></label><label>First flask number<input name="flask_start" type="number" min="1" max="10000" value="1" required></label><label>Number of flasks<input name="flask_count" type="number" min="1" max="384" value="8" required></label><label>Replicates per flask<input name="replicates" type="number" min="1" max="48" value="2" required></label><label>Start from row<select name="row_direction"><option value="bottom">Bottom row, move up</option><option value="top">Top row, move down</option></select></label><label>Column blocks<select name="column_direction"><option value="left">Left to right</option><option value="right">Right to left</option></select></label><label>Skip initial flask slots<input name="start_slot" type="number" min="0" max="10000" value="0" required></label></div><p class="muted">Each flask takes one row across adjacent replicate columns. After the rows finish, move to the next column block. A new plate starts when a full sample no longer fits.</p><details><summary>Preview sequence on an example grid</summary><div class="form-grid"><label>Rows, top to bottom<input id="preview-rows" value="A,B,C,D,E,F,G,H"></label><label>Columns, left to right<input id="preview-cols" value="1,2,3,4,5,6,7,8,9,10,11,12"></label></div><button type="button" id="preview-template" class="secondary">Preview mapping</button><div id="template-preview" class="table-scroll"></div></details><div class="actions"><button type="submit">Save template</button><button type="button" id="cancel-template" class="quiet">Cancel</button></div></form></section>
+</section>
+</div>
+<p id="no-experiment" class="empty">Create an experiment to choose your flask sequence and start capturing.</p>
+</section>
+</main>
+<footer>Plate to Excel <span>Capture · Review · Track</span></footer>
+</body></html>

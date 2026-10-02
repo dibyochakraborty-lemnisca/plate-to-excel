@@ -5,3 +5,8 @@ __pycache__/
 .DS_Store
 .streamlit/secrets.toml
 *.xlsx
+
+data/
+.impeccable/review/
+service-account*.json
+secrets/
